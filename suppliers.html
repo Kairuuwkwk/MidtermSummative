@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suppliers | SynchroChain</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="user.css">
+</head>
+<body data-page="suppliers">
+
+<nav class="navbar">
+    <a href="index.html" class="logo">SynchroChain<span>®</span></a>
+    <button class="mobile-menu" type="button" aria-label="Open menu">☰</button>
+    <div class="nav-links">
+        <a href="index.html">Dashboard</a>
+        <a href="inventory.html">Products</a>
+        <a href="suppliers.html" class="active">Suppliers</a>
+        <a href="orders.html">My Orders</a>
+        <a href="deliveries.html">Deliveries</a>
+        <a href="finance.html">My Spending</a>
+        <a href="mailto:admin@example.com" class="contact-btn">Contact Us</a>
+        <span class="user-chip" id="userChip"></span>
+        <button type="button" class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+</nav>
+
+<header class="page-header">
+    <div class="page-header-inner">
+        <div class="eyebrow">OUR PARTNERS</div>
+        <h1>Our Suppliers</h1>
+        <p>The trusted partners behind the products you order.</p>
+    </div>
+</header>
+
+<main class="content">
+
+    <div class="cards">
+        <div class="card"><small>Trusted Suppliers</small><h3>28</h3></div>
+        <div class="card"><small>Product Categories</small><h3>3</h3></div>
+        <div class="card"><small>Avg. Delivery Time</small><h3>3 days</h3></div>
+    </div>
+
+    <div class="toolbar">
+        <input id="tableSearch" class="search" type="text" placeholder="Search suppliers...">
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Supplier</th><th>Supplies</th><th>Contact</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>TechSource</td><td>Electronics</td><td>supplier@techsource</td><td><span class="badge green">Verified</span></td></tr>
+                <tr><td>GearHub</td><td>Accessories</td><td>sales@gearhub</td><td><span class="badge green">Verified</span></td></tr>
+                <tr><td>PackRight</td><td>Packaging</td><td>hello@packright</td><td><span class="badge green">Verified</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div>© 2026 SynchroChain</div>
+        <div>Goods · Data · Finance · Delivery</div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+<script src="user.js"></script>
+</body>
+</html>

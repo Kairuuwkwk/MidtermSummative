@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | SynchroChain</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="auth-page">
+
+    <div class="auth-container">
+
+        <div class="auth-brand">
+
+            <a href="login.html" class="logo">SynchroChain<span>®</span></a>
+
+            <p>Supply Chain Management System</p>
+
+        </div>
+
+        <div class="auth-card">
+
+            <div class="eyebrow">USER LOGIN</div>
+
+            <h1>Welcome Back</h1>
+
+            <p class="auth-description">
+                Sign in to access your supply chain dashboard.
+            </p>
+
+            <form id="loginForm">
+
+                <div class="auth-field">
+
+                    <label for="loginEmail">Email Address</label>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+                <div class="auth-field">
+
+                    <label for="loginPassword">Password</label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+                <button type="submit" class="btn auth-btn">Login</button>
+
+            </form>
+
+            <div id="loginMessage" class="auth-message"></div>
+
+            <div class="auth-divider">
+                <span>OR</span>
+            </div>
+
+            <a href="register.html" class="auth-secondary-btn">Create User Account</a>
+
+            <div class="admin-login-box">
+
+                <p>Are you an administrator?</p>
+
+                <a href="admin-login.html" class="admin-login-link">Administrator Login</a>
+
+            </div>
+
+        </div>
+
+        <div class="auth-footer">© 2026 SynchroChain SCM</div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

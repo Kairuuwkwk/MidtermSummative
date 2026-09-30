@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | SynchroChain</title>
+    <link rel="stylesheet" href="style.css">
+   </head>
+<body data-page="orders">
+
+<nav class="navbar">
+    <a href="index.html" class="logo">SynchroChain<span>®</span></a>
+    <button class="mobile-menu" type="button" aria-label="Open menu">☰</button>
+    <div class="nav-links">
+        <a href="index.html">Dashboard</a>
+        <a href="inventory.html">Products</a>
+        <a href="suppliers.html">Suppliers</a>
+        <a href="orders.html" class="active">My Orders</a>
+        <a href="deliveries.html">Deliveries</a>
+        <a href="finance.html">My Spending</a>
+        <a href="mailto:admin@example.com" class="contact-btn">Contact Us</a>
+        <span class="user-chip" id="userChip"></span>
+        <button type="button" class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+</nav>
+
+<header class="page-header">
+    <div class="page-header-inner">
+        <div class="eyebrow">MY ORDERS</div>
+        <h1>My Orders</h1>
+        <p>Review everything you've ordered and where it stands.</p>
+    </div>
+</header>
+
+<main class="content">
+
+    <div class="cards">
+        <div class="card"><small>My Orders</small><h3 id="statAllOrders">0</h3><div class="trend">All time</div></div>
+        <div class="card"><small>In Progress</small><h3 id="statInProgress">0</h3><div class="trend">On their way to you</div></div>
+        <div class="card"><small>Delivered</small><h3 id="statDelivered">0</h3><div class="trend">Completed</div></div>
+    </div>
+
+    <div class="toolbar">
+        <input id="tableSearch" class="search" type="text" placeholder="Search my orders...">
+    </div>
+
+    <div class="table-wrap">
+        <table id="ordersTable">
+            <thead>
+                <tr><th>Order</th><th>Item</th><th>Date</th><th>Amount</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div>© 2026 SynchroChain</div>
+        <div>Goods · Data · Finance · Delivery</div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>SynchroChain | Supply Chain Management</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body data-page="home">
+
+    <!-- =========================================
+         NAVIGATION
+    ========================================== -->
+
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+            SynchroChain<span>®</span>
+        </a>
+
+
+        <button
+            class="mobile-menu"
+            type="button"
+            aria-label="Open menu">
+
+            ☰
+
+        </button>
+
+
+        <div class="nav-links">
+
+            <a
+                href="index.html"
+                class="active">
+
+                Home
+
+            </a>
+
+
+            <a href="inventory.html">
+                Inventory
+            </a>
+
+
+            <a href="suppliers.html">
+                Suppliers
+            </a>
+
+
+            <a href="orders.html">
+                Orders
+            </a>
+
+
+            <a href="deliveries.html">
+                Deliveries
+            </a>
+
+
+            <a href="finance.html">
+                Finance
+            </a>
+
+
+            <a
+                href="mailto:admin@example.com"
+                class="contact-btn">
+
+                Contact Us
+
+            </a>
+
+
+            <span
+                class="user-chip"
+                id="userChip">
+
+            </span>
+
+
+            <button
+                type="button"
+                class="logout-btn"
+                id="logoutBtn">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- =========================================
+         HERO
+    ========================================== -->
+
+    <header
+        class="hero"
+        style="background-image: linear-gradient(rgba(10, 45, 55, 0.55), rgba(10, 45, 55, 0.55)), url('https://www.sap.com/resources/media_14197d45de88962a045fb9ad041863beefca1c3f1.jpg?width=1200&format=pjpg&optimize=medium');">
+
+
+        <div class="hero-inner">
+
+
+            <!-- EYEBROW -->
+
+            <div class="eyebrow">
+
+                SUPPLY CHAIN MANAGEMENT
+
+            </div>
+
+
+
+            <!-- TITLE -->
+
+            <h1>
+
+                Global Supply<br>
+                Chain Management
+
+            </h1>
+
+
+
+            <!-- DESCRIPTION -->
+
+            <p>
+
+                Monitor goods, information, orders, suppliers,
+                deliveries, and finances from raw materials
+                to final product delivery.
+
+            </p>
+
+
+
+            <!-- =====================================
+                 SHIPMENT SEARCH
+            ====================================== -->
+
+            <form
+                class="search-card search-form"
+                id="shipmentSearchForm">
+
+
+                <h3>
+
+                    Get your supply here
+
+                </h3>
+
+
+
+                <!-- CATEGORY -->
+
+                <div class="form-row">
+
+                    <select
+                        id="shipmentCategory"
+                        required>
+
+                        <option value="All Categories">
+
+                            All Categories
+
+                        </option>
+
+
+                        <option value="Raw Materials">
+
+                            Raw Materials
+
+                        </option>
+
+
+                        <option value="Electronics">
+
+                            Electronics
+
+                        </option>
+
+
+                        <option value="Packaging">
+
+                            Packaging
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- DATE + BUTTON -->
+
+                <div class="form-row">
+
+                    <input
+                        type="date"
+                        id="shipmentDate"
+                        required>
+
+
+                    <button
+                        class="btn"
+                        type="submit">
+
+                        Find Shipments
+
+                    </button>
+
+                </div>
+
+
+
+                <!-- SEARCH MESSAGE -->
+
+                <small
+                    id="searchResult">
+
+                </small>
+
+
+            </form>
+
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================
+         SHIPMENT RESULTS
+    ========================================== -->
+
+    <section
+        class="shipment-results-section">
+
+        <div
+            id="shipmentResults"
+            class="shipment-results">
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         OVERVIEW
+    ========================================== -->
+
+    <section class="section reveal">
+
+
+        <div class="section-inner intro-grid">
+
+
+            <!-- IMAGE -->
+
+            <div class="image-card">
+
+            </div>
+
+
+
+            <!-- TEXT -->
+
+            <div>
+
+
+                <div class="eyebrow">
+
+                    OVERVIEW
+
+                </div>
+
+
+
+                <h2>
+
+                    Control, visibility,
+                    efficiency from
+                    start - finish.
+
+                </h2>
+
+
+
+                <p>
+
+                    Supply chains can be complicated.
+                    This SCM dashboard keeps important
+                    information in one place so users can
+                    monitor inventory, suppliers, orders,
+                    deliveries, and finances.
+
+                </p>
+
+
+
+                <a
+                    href="inventory.html"
+                    class="btn explore-btn">
+
+                    Explore Inventory
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =====================================
+             STATISTICS
+        ====================================== -->
+
+        <div class="stats reveal">
+
+
+            <!-- STAT 1 -->
+
+            <div class="stat">
+
+                <strong>
+                    250
+                </strong>
+
+                <span>
+                    Raw Materials
+                </span>
+
+            </div>
+
+
+
+            <!-- STAT 2 -->
+
+            <div class="stat">
+
+                <strong>
+                    180
+                </strong>
+
+                <span>
+                    Inventory Items
+                </span>
+
+            </div>
+
+
+
+            <!-- STAT 3 -->
+
+            <div class="stat">
+
+                <strong>
+                    45
+                </strong>
+
+                <span>
+                    Pending Orders
+                </span>
+
+            </div>
+
+
+
+            <!-- STAT 4 -->
+
+            <div class="stat">
+
+                <strong>
+                    32
+                </strong>
+
+                <span>
+                    Active Deliveries
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =========================================
+         SUPPLY CHAIN FLOW
+    ========================================== -->
+
+    <section class="section flow">
+
+
+        <div class="section-inner">
+
+
+            <div class="eyebrow">
+
+                SUPPLY CHAIN FLOW
+
+            </div>
+
+
+
+            <h2>
+
+                From raw materials
+                to the customer's door.
+
+            </h2>
+
+
+
+            <div class="flow-grid">
+
+
+                <!-- FLOW 01 -->
+
+                <div class="flow-item reveal">
+
+
+                    <div class="flow-num">
+
+                        01
+
+                    </div>
+
+
+                    <h3>
+
+                        Raw Materials
+
+                    </h3>
+
+
+                    <p>
+
+                        Track materials received
+                        from suppliers.
+
+                    </p>
+
+
+                </div>
+
+
+
+                <!-- FLOW 02 -->
+
+                <div class="flow-item reveal">
+
+
+                    <div class="flow-num">
+
+                        02
+
+                    </div>
+
+
+                    <h3>
+
+                        Production
+
+                    </h3>
+
+
+                    <p>
+
+                        Monitor products as they
+                        move through production.
+
+                    </p>
+
+
+                </div>
+
+
+
+                <!-- FLOW 03 -->
+
+                <div class="flow-item reveal">
+
+
+                    <div class="flow-num">
+
+                        03
+
+                    </div>
+
+
+                    <h3>
+
+                        Inventory
+
+                    </h3>
+
+
+                    <p>
+
+                        Check stock levels and
+                        identify low-stock items.
+
+                    </p>
+
+
+                </div>
+
+
+
+                <!-- FLOW 04 -->
+
+                <div class="flow-item reveal">
+
+
+                    <div class="flow-num">
+
+                        04
+
+                    </div>
+
+
+                    <h3>
+
+                        Delivery
+
+                    </h3>
+
+
+                    <p>
+
+                        Track orders until they
+                        reach the customer.
+
+                    </p>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =========================================
+         CALL TO ACTION
+    ========================================== -->
+
+    <section class="cta">
+
+
+        <div class="cta-inner">
+
+
+            <h2>
+
+                Make your supply
+                chain visible.
+
+            </h2>
+
+
+
+            <a
+                href="orders.html"
+                class="btn">
+
+                View Orders
+
+            </a>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =========================================
+         FOOTER
+    ========================================== -->
+
+    <footer>
+
+
+        <div class="footer-inner">
+
+
+            <div>
+
+                © 2026 SynchroChain
+
+            </div>
+
+
+            <div>
+
+                Goods · Data · Finance · Delivery
+
+            </div>
+
+
+        </div>
+
+
+    </footer>
+
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>

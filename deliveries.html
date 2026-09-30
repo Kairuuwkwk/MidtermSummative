@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Deliveries | SynchroChain</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="user.css">
+</head>
+<body data-page="deliveries">
+
+<nav class="navbar">
+    <a href="index.html" class="logo">SynchroChain<span>®</span></a>
+    <button class="mobile-menu" type="button" aria-label="Open menu">☰</button>
+    <div class="nav-links">
+        <a href="index.html">Dashboard</a>
+        <a href="inventory.html">Products</a>
+        <a href="suppliers.html">Suppliers</a>
+        <a href="orders.html">My Orders</a>
+        <a href="deliveries.html" class="active">Deliveries</a>
+        <a href="finance.html">My Spending</a>
+        <a href="mailto:admin@example.com" class="contact-btn">Contact Us</a>
+        <span class="user-chip" id="userChip"></span>
+        <button type="button" class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+</nav>
+
+<header class="page-header">
+    <div class="page-header-inner">
+        <div class="eyebrow">MY DELIVERIES</div>
+        <h1>Track My Deliveries</h1>
+        <p>See where your packages are and when they'll arrive.</p>
+    </div>
+</header>
+
+<main class="content">
+
+    <div class="delivery-list" id="deliveryList"></div>
+
+    <div class="card tracking-card" id="latestUpdate">
+        <div class="eyebrow">LATEST UPDATE</div>
+        <h2>—</h2>
+
+        <div class="timeline">
+            <div class="step"><div class="step-dot"></div><span>Order placed</span></div>
+            <div class="step"><div class="step-dot"></div><span>Processing</span></div>
+            <div class="step"><div class="step-dot"></div><span>Shipped</span></div>
+            <div class="step"><div class="step-dot"></div><span>Delivered</span></div>
+        </div>
+    </div>
+
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div>© 2026 SynchroChain</div>
+        <div>Goods · Data · Finance · Delivery</div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | SynchroChain</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="user.css">
+</head>
+<body data-page="inventory">
+
+<nav class="navbar">
+    <a href="index.html" class="logo">SynchroChain<span>®</span></a>
+    <button class="mobile-menu" type="button" aria-label="Open menu">☰</button>
+    <div class="nav-links">
+        <a href="index.html">Dashboard</a>
+        <a href="inventory.html" class="active">Products</a>
+        <a href="suppliers.html">Suppliers</a>
+        <a href="orders.html">My Orders</a>
+        <a href="deliveries.html">Deliveries</a>
+        <a href="finance.html">My Spending</a>
+        <a href="mailto:admin@example.com" class="contact-btn">Contact Us</a>
+        <span class="user-chip" id="userChip"></span>
+        <button type="button" class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+</nav>
+
+<header class="page-header">
+    <div class="page-header-inner">
+        <div class="eyebrow">PRODUCTS</div>
+        <h1>Browse Products</h1>
+        <p>See what's available and order the items you need.</p>
+    </div>
+</header>
+
+<main class="content">
+
+    <div class="cards">
+        <div class="card"><small>Available Now</small><h3 id="statAvailable">0</h3><div class="trend">Ready to ship</div></div>
+        <div class="card"><small>Running Low</small><h3 id="statLow">0</h3><div class="trend">Order soon</div></div>
+        <div class="card"><small>Out of Stock</small><h3 id="statOut">0</h3><div class="trend">Get notified when back</div></div>
+    </div>
+
+    <div class="toolbar">
+        <input id="tableSearch" class="search" type="text" placeholder="Search products...">
+        <select class="filter">
+            <option value="">All Availability</option>
+            <option value="in stock">In Stock</option>
+            <option value="low stock">Low Stock</option>
+            <option value="out of stock">Out of Stock</option>
+        </select>
+    </div>
+
+    <div class="table-wrap">
+        <table id="productsTable">
+            <thead>
+                <tr><th>Product</th><th>Category</th><th>Price</th><th>Availability</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div>© 2026 SynchroChain</div>
+        <div>Goods · Data · Finance · Delivery</div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>

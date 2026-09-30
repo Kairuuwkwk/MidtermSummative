@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Spending | SynchroChain</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="user.css">
+</head>
+<body data-page="finance">
+
+<nav class="navbar">
+    <a href="index.html" class="logo">SynchroChain<span>®</span></a>
+    <button class="mobile-menu" type="button" aria-label="Open menu">☰</button>
+    <div class="nav-links">
+        <a href="index.html">Dashboard</a>
+        <a href="inventory.html">Products</a>
+        <a href="suppliers.html">Suppliers</a>
+        <a href="orders.html">My Orders</a>
+        <a href="deliveries.html">Deliveries</a>
+        <a href="finance.html" class="active">My Spending</a>
+        <a href="mailto:admin@example.com" class="contact-btn">Contact Us</a>
+        <span class="user-chip" id="userChip"></span>
+        <button type="button" class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+</nav>
+
+<header class="page-header">
+    <div class="page-header-inner">
+        <div class="eyebrow">MY SPENDING</div>
+        <h1>My Spending</h1>
+        <p>Keep track of what you've spent and what's still due.</p>
+    </div>
+</header>
+
+<main class="content">
+
+    <div class="cards">
+        <div class="card"><small>Total Spent</small><h3 id="statTotalSpent">₱0</h3><div class="trend">All orders</div></div>
+        <div class="card"><small>Amount Due</small><h3 id="statAmountDue">₱0</h3><div class="trend">Pending payments</div></div>
+        <div class="card"><small>Last Payment</small><h3 id="statLastPayment">₱0</h3><div class="trend">Most recent</div></div>
+    </div>
+
+    <div class="finance-grid">
+
+        <div class="card">
+            <div class="eyebrow">LAST 6 MONTHS</div>
+            <h2>Monthly Spending</h2>
+            <div class="chart" id="spendingChart"></div>
+            <div class="chart-labels" id="spendingChartLabels"></div>
+        </div>
+
+        <div class="card">
+            <div class="eyebrow">PAYMENT HISTORY</div>
+            <div id="paymentHistory"></div>
+        </div>
+
+    </div>
+
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div>© 2026 SynchroChain</div>
+        <div>Goods · Data · Finance · Delivery</div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>

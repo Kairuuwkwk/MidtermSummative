@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | SynchroChain</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="auth-page">
+
+    <div class="auth-container">
+
+        <div class="auth-brand">
+
+            <a href="login.html" class="logo">SynchroChain<span>®</span></a>
+
+            <p>Supply Chain Management System</p>
+
+        </div>
+
+        <div class="auth-card">
+
+            <div class="eyebrow">USER REGISTRATION</div>
+
+            <h1>Create Account</h1>
+
+            <p class="auth-description">
+                Register a normal user account to access
+                the SCM dashboard.
+            </p>
+
+            <form id="registerForm">
+
+                <div class="auth-field">
+
+                    <label for="registerName">Full Name</label>
+
+                    <input
+                        type="text"
+                        id="registerName"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+                <div class="auth-field">
+
+                    <label for="registerEmail">Email Address</label>
+
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+                <div class="auth-field">
+
+                    <label for="registerPassword">Password</label>
+
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        placeholder="Create a password"
+                        minlength="6"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+                <div class="auth-field">
+
+                    <label for="registerConfirm">Confirm Password</label>
+
+                    <input
+                        type="password"
+                        id="registerConfirm"
+                        placeholder="Confirm your password"
+                        minlength="6"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+                <button type="submit" class="btn auth-btn">Create Account</button>
+
+            </form>
+
+            <div id="registerMessage" class="auth-message"></div>
+
+            <div class="auth-divider">
+                <span>OR</span>
+            </div>
+
+            <a href="login.html" class="auth-secondary-btn">Back to Login</a>
+
+        </div>
+
+        <div class="auth-footer">© 2026 SynchroChain SCM</div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

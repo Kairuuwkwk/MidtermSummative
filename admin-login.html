@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator Login | SynchroChain</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="auth-page">
+
+    <div class="auth-container">
+
+        <div class="auth-brand">
+
+            <a href="login.html" class="logo">SynchroChain<span>®</span></a>
+
+            <p>Supply Chain Management System</p>
+
+        </div>
+
+        <div class="auth-card">
+
+            <div class="eyebrow">ADMINISTRATOR ACCESS</div>
+
+            <h1>Administrator Login</h1>
+
+            <p class="auth-description">
+                Sign in with your administrator credentials
+                to access the administration dashboard.
+            </p>
+
+            <form id="adminLoginForm">
+
+                <div class="auth-field">
+
+                    <label for="adminUsername">Username</label>
+
+                    <input
+                        type="text"
+                        id="adminUsername"
+                        placeholder="Enter administrator username"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+                <div class="auth-field">
+
+                    <label for="adminPassword">Password</label>
+
+                    <input
+                        type="password"
+                        id="adminPassword"
+                        placeholder="Enter administrator password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+                <button type="submit" class="btn auth-btn">Administrator Login</button>
+
+            </form>
+
+            <div id="adminLoginMessage" class="auth-message"></div>
+
+            <div class="auth-divider">
+                <span>OR</span>
+            </div>
+
+            <a href="login.html" class="auth-secondary-btn">Back to User Login</a>
+
+        </div>
+
+        <div class="auth-footer">© 2026 SynchroChain SCM</div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
