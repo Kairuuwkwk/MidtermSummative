@@ -2177,11 +2177,15 @@ document.addEventListener("DOMContentLoaded", function () {
         "Cebu"
     ];
 
-    function createOrder(product) {
+    function createOrder(product, details) {
 
         if (!session) {
             return null;
         }
+
+        details = details || {};
+
+        const qty = details.quantity || 1;
 
         const order = {
             id: nextOrderId(),
@@ -2190,10 +2194,20 @@ document.addEventListener("DOMContentLoaded", function () {
             productId: product.id,
             item: product.name,
             category: product.category,
-            amount: product.price,
+            quantity: qty,
+            amount: product.price * qty,
             date: new Date().toISOString(),
             status: "Processing",
-            location: LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)]
+            location: details.city
+                ? details.city + ", " + details.province
+                : LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)],
+            recipient: details.recipient || "",
+            phone: details.phone || "",
+            address: details.address || "",
+            zip: details.zip || "",
+            deliveryDate: details.deliveryDate || "",
+            payment: details.payment || "",
+            notes: details.notes || ""
         };
 
         const orders = getOrders();
@@ -2222,6 +2236,209 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function statusBadgeClass(status) {
         return status === "Delivered" ? "green" : "orange";
+    }
+
+
+    /* ---------- ORDER POPUP ---------- */
+
+    function openOrderModal(product, onDone) {
+
+        const old = document.querySelector("#orderOverlay");
+        if (old) {
+            old.remove();
+        }
+
+        const overlay = document.createElement("div");
+        overlay.id = "orderOverlay";
+        overlay.className = "order-overlay";
+
+        overlay.innerHTML = `
+            <div class="order-modal">
+                <div class="order-head">
+                    <h2>Order Details</h2>
+                    <button type="button" class="order-close" aria-label="Close">×</button>
+                </div>
+
+                <form id="orderForm" novalidate>
+
+                    <div class="order-product">
+                        <div><strong id="oName"></strong><small id="oMeta"></small></div>
+                        <strong id="oPrice"></strong>
+                    </div>
+
+                    <div class="order-field">
+                        <label>Quantity (pcs)</label>
+                        <div class="qty-row">
+                            <div class="qty-box">
+                                <button type="button" id="qtyMinus">−</button>
+                                <input type="number" id="oQty" value="1" min="1">
+                                <button type="button" id="qtyPlus">+</button>
+                            </div>
+                            <small id="oStock"></small>
+                        </div>
+                    </div>
+
+                    <div class="order-grid">
+                        <div class="order-field"><label>Recipient name</label><input type="text" id="oRecipient"></div>
+                        <div class="order-field"><label>Mobile number</label><input type="tel" id="oPhone" placeholder="09XXXXXXXXX"></div>
+                        <div class="order-field full"><label>Street / building</label><input type="text" id="oStreet"></div>
+                        <div class="order-field"><label>Barangay</label><input type="text" id="oBarangay"></div>
+                        <div class="order-field"><label>City / Municipality</label><input type="text" id="oCity"></div>
+                        <div class="order-field"><label>Province</label><input type="text" id="oProvince"></div>
+                        <div class="order-field"><label>ZIP code</label><input type="text" id="oZip" maxlength="4"></div>
+                        <div class="order-field"><label>Preferred delivery date</label><input type="date" id="oDate"></div>
+                        <div class="order-field">
+                            <label>Payment method</label>
+                            <select id="oPayment">
+                                <option value="">Select payment</option>
+                                <option>Cash on Delivery</option>
+                                <option>GCash</option>
+                                <option>Bank Transfer</option>
+                            </select>
+                        </div>
+                        <div class="order-field full"><label>Notes (optional)</label><textarea id="oNotes" placeholder="e.g. Call before delivery"></textarea></div>
+                    </div>
+
+                    <div class="order-total"><span id="oTotalLabel"></span><strong id="oTotal"></strong></div>
+
+                    <p class="order-error" id="oError"></p>
+
+                    <div class="order-actions">
+                        <button type="button" class="btn order-cancel">Cancel</button>
+                        <button type="submit" class="btn">Place Order</button>
+                    </div>
+
+                </form>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+        document.body.classList.add("modal-open");
+        setTimeout(function () { overlay.classList.add("show"); }, 10);
+
+        const $ = function (sel) { return overlay.querySelector(sel); };
+
+        $("#oName").textContent = product.name;
+        $("#oMeta").textContent = " · " + product.category;
+        $("#oPrice").textContent = formatMoney(product.price) + " / pc";
+        $("#oStock").textContent = product.stock + " pcs available";
+        $("#oRecipient").value = (session && (session.name || session.username)) || "";
+
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const minDate = tomorrow.toLocaleDateString("en-CA");
+        $("#oDate").min = minDate;
+
+        const qtyInput = $("#oQty");
+        qtyInput.max = product.stock;
+
+        function qty() {
+            let q = parseInt(qtyInput.value, 10);
+            if (isNaN(q) || q < 1) { q = 1; }
+            return Math.min(q, product.stock);
+        }
+
+        function updateTotal() {
+            $("#oTotalLabel").textContent = qty() + " × " + formatMoney(product.price);
+            $("#oTotal").textContent = formatMoney(product.price * qty());
+        }
+
+        $("#qtyMinus").addEventListener("click", function () { qtyInput.value = Math.max(1, qty() - 1); updateTotal(); });
+        $("#qtyPlus").addEventListener("click", function () { qtyInput.value = qty() + 1; updateTotal(); });
+        qtyInput.addEventListener("input", updateTotal);
+        qtyInput.addEventListener("blur", function () { qtyInput.value = qty(); updateTotal(); });
+        updateTotal();
+
+        function onKey(e) {
+            if (e.key === "Escape") { close(); }
+        }
+
+        function close() {
+            document.removeEventListener("keydown", onKey);
+            document.body.classList.remove("modal-open");
+            overlay.classList.remove("show");
+            setTimeout(function () { overlay.remove(); }, 250);
+        }
+
+        document.addEventListener("keydown", onKey);
+        $(".order-close").addEventListener("click", close);
+        $(".order-cancel").addEventListener("click", close);
+        overlay.addEventListener("click", function (e) {
+            if (e.target === overlay) { close(); }
+        });
+
+        function clean(v) {
+            return v.replace(/[<>]/g, "").trim();
+        }
+
+        $("#orderForm").addEventListener("submit", function (e) {
+
+            e.preventDefault();
+
+            const d = {
+                quantity: qty(),
+                recipient: clean($("#oRecipient").value),
+                phone: $("#oPhone").value.replace(/[\s-]/g, ""),
+                street: clean($("#oStreet").value),
+                barangay: clean($("#oBarangay").value),
+                city: clean($("#oCity").value),
+                province: clean($("#oProvince").value),
+                zip: $("#oZip").value.trim(),
+                deliveryDate: $("#oDate").value,
+                payment: $("#oPayment").value,
+                notes: clean($("#oNotes").value)
+            };
+
+            const checks = [
+                ["#oRecipient", !d.recipient, "Please enter the recipient's name."],
+                ["#oPhone", !/^(\+?63|0)9\d{9}$/.test(d.phone), "Enter a valid mobile number (e.g. 09171234567)."],
+                ["#oStreet", !d.street, "Please enter the street or building."],
+                ["#oBarangay", !d.barangay, "Please enter the barangay."],
+                ["#oCity", !d.city, "Please enter the city or municipality."],
+                ["#oProvince", !d.province, "Please enter the province."],
+                ["#oZip", !/^\d{4}$/.test(d.zip), "ZIP code must be 4 digits."],
+                ["#oDate", !d.deliveryDate || d.deliveryDate < minDate, "Choose a delivery date from tomorrow onwards."],
+                ["#oPayment", !d.payment, "Please select a payment method."]
+            ];
+
+            overlay.querySelectorAll(".invalid").forEach(function (f) { f.classList.remove("invalid"); });
+            $("#oError").textContent = "";
+
+            for (let i = 0; i < checks.length; i++) {
+                if (checks[i][1]) {
+                    $("#oError").textContent = checks[i][2];
+                    $(checks[i][0]).classList.add("invalid");
+                    $(checks[i][0]).focus();
+                    return;
+                }
+            }
+
+            /* Re-check stock, then save */
+
+            const fresh = getProducts();
+            const target = fresh.find(function (p) { return p.id === product.id; });
+
+            if (!target || target.stock < d.quantity) {
+                $("#oError").textContent = "Sorry, only " + (target ? target.stock : 0) + " pcs left.";
+                return;
+            }
+
+            d.address = d.street + ", Brgy. " + d.barangay + ", " + d.city + ", " + d.province;
+
+            target.stock -= d.quantity;
+            saveProducts(fresh);
+
+            const order = createOrder(target, d);
+
+            close();
+            toast(d.quantity + " × " + product.name + " ordered (" + order.id + "). Check My Orders.");
+
+            if (typeof onDone === "function") {
+                onDone();
+            }
+
+        });
+
     }
 
 
@@ -2307,24 +2524,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             return;
                         }
 
-                        const fresh = getProducts();
-
-                        const target = fresh.find(function (p) {
-                            return p.id === product.id;
-                        });
-
-                        if (!target || target.stock <= 0) {
-                            toast(product.name + " is no longer available.", "error");
-                            renderProducts();
-                            return;
-                        }
-
-                        target.stock -= 1;
-                        saveProducts(fresh);
-                        createOrder(target);
-
-                        toast(product.name + " ordered! Check My Orders for status.");
-                        renderProducts();
+                        openOrderModal(product, renderProducts);
 
                     });
 
@@ -2413,7 +2613,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 row.innerHTML =
                     "<td>" + order.id + "</td>" +
-                    "<td>" + order.item + "</td>" +
+                    "<td>" + order.item + (order.quantity > 1 ? " × " + order.quantity : "") + "</td>" +
                     "<td>" + formatDate(order.date) + "</td>" +
                     "<td>" + formatMoney(order.amount) + "</td>" +
                     "<td><span class='badge " + statusBadgeClass(order.status) + "'>" + order.status + "</span></td>" +

@@ -1095,6 +1095,224 @@ tbody tr {
 
 
 /* =========================================
+   ORDER POPUP
+========================================= */
+
+.order-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(12, 34, 42, 0.65);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 3000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.order-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.order-modal {
+    width: min(620px, 100%);
+    max-height: 92vh;
+    overflow-y: auto;
+    background: var(--white);
+    border-radius: 10px;
+    padding: 28px;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(20px) scale(0.98);
+    transition: transform 0.25s ease;
+}
+
+.order-overlay.show .order-modal {
+    transform: none;
+}
+
+.order-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.order-head h2 {
+    color: var(--navy);
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.order-close {
+    width: 35px;
+    height: 35px;
+    border: 0;
+    background: #f1f3f2;
+    border-radius: 50%;
+    font-size: 20px;
+    color: var(--navy);
+}
+
+.order-close:hover {
+    background: #e5e9e7;
+}
+
+.order-product {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    background: #f7f8f7;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 16px;
+    color: var(--navy);
+}
+
+.order-product small {
+    color: var(--muted);
+}
+
+.order-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.order-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.order-field.full {
+    grid-column: 1 / -1;
+}
+
+.order-field label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.order-field input,
+.order-field select,
+.order-field textarea {
+    padding: 11px 12px;
+    font-size: 14px;
+}
+
+.order-field textarea {
+    resize: vertical;
+    min-height: 65px;
+}
+
+.order-modal .invalid {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(181, 59, 59, 0.12);
+}
+
+.qty-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.qty-row small {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.qty-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.qty-box button {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    background: #f1f3f2;
+    font-size: 20px;
+    color: var(--navy);
+}
+
+.qty-box button:hover {
+    background: #e5e9e7;
+}
+
+.qty-box input {
+    width: 64px;
+    border: 0;
+    border-radius: 0;
+    text-align: center;
+    padding: 10px 0;
+    box-shadow: none;
+}
+
+.order-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.order-total strong {
+    color: var(--navy);
+    font-size: 26px;
+    font-weight: 500;
+}
+
+.order-error {
+    min-height: 20px;
+    margin-top: 10px;
+    color: var(--red);
+    font-size: 13px;
+}
+
+.order-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.order-cancel {
+    background: transparent;
+    color: var(--navy);
+    border: 1px solid var(--line);
+}
+
+.order-cancel:hover {
+    background: #f1f3f2;
+    box-shadow: none;
+}
+
+@media (max-width: 600px) {
+    .order-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .order-modal {
+        padding: 22px;
+    }
+}
+
+
+/* =========================================
    TOAST
 ========================================= */
 
@@ -2024,6 +2242,10 @@ tbody tr {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+
+}
+
+
 /* =========================================================
    SHIPMENT SEARCH RESULTS
    ========================================================= */
@@ -2318,5 +2540,4 @@ tbody tr {
     .admin-inline-form {
         grid-template-columns: 1fr;
     }
-}
 }
