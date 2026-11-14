@@ -68,7 +68,26 @@
     </div>
 </footer>
 
-<script src="script.js"></script>
+<!-- Product details modal (opens on click) -->
+<div class="product-modal" id="productModal" hidden>
+    <div class="product-modal-box" role="dialog" aria-modal="true" aria-labelledby="pmName">
+        <button type="button" class="pm-close" id="pmClose" aria-label="Close">×</button>
+        <img id="pmImage" alt="">
+        <div class="pm-body">
+            <h2 id="pmName"></h2>
+            <p class="pm-meta" id="pmMeta"></p>
+            <p id="pmDesc"></p>
+            <table class="pm-specs"><tbody id="pmSpecs"></tbody></table>
+        </div>
+    </div>
+</div>
 
+<!-- Small preview card (shows on hover) -->
+<div class="product-hover" id="productHover" hidden></div>
+
+<script src="script.js"></script>
+<script src="product-details.js"></script>
+<script src="order-autofill.js"></script>
+<script src="order-fixed.js"></script>
 </body>
 </html>

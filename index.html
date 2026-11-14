@@ -2,16 +2,169 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>SynchroChain | Supply Chain Management</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <!-- LEFT-ALIGNED HERO + DELIVERY AVAILABILITY PANEL -->
+    <style>
+        /* hero content starts at the same left edge as the logo */
+        body[data-page="home"] .hero-inner {
+            width: min(1640px, 92%) !important;
+            max-width: 1640px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            text-align: left !important;
+        }
+
+        body[data-page="home"] .hero-inner .search-card {
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
+
+        /* results area */
+        body[data-page="home"] #shipmentResults:not(:empty) {
+            width: min(1640px, 92%);
+            margin: 0 auto;
+            padding: 32px 0 8px;
+            box-sizing: border-box;
+        }
+
+        .avail-panel {
+            background: #ffffff;
+            color: #102d38;
+            border: 1px solid rgba(16, 45, 56, .12);
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 6px 24px rgba(16, 45, 56, .08);
+            text-align: left;
+        }
+
+        .avail-head {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .avail-eyebrow {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            color: #ff6a00;
+            margin-bottom: 4px;
+        }
+
+        .avail-head h3 { margin: 0 0 4px; font-size: 22px; color: #102d38; }
+        .avail-head p { margin: 0; font-size: 14px; opacity: .75; }
+
+        .avail-summary {
+            background: #f4f2ed;
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .avail-summary strong { display: block; font-size: 16px; color: #28764a; }
+        .avail-summary.none strong { color: #b53b3b; }
+
+        .avail-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 12px;
+            margin: 0 0 16px;
+            opacity: .85;
+        }
+
+        .avail-legend span::before {
+            content: "";
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            margin-right: 6px;
+            background: var(--dot, #999);
+        }
+
+        .avail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 14px;
+        }
+
+        .avail-card {
+            border: 1px solid rgba(16, 45, 56, .14);
+            border-radius: 12px;
+            padding: 14px 16px;
+            background: #fbfaf7;
+        }
+
+        .avail-card.selected {
+            border-color: #ff6a00;
+            box-shadow: 0 0 0 2px rgba(255, 106, 0, .18);
+            background: #fff;
+        }
+
+        .avail-date {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(16, 45, 56, .1);
+        }
+
+        .avail-date strong { font-size: 15px; }
+        .avail-date small { opacity: .6; }
+
+        .avail-tag {
+            margin-left: auto;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            background: #ff6a00;
+            color: #fff;
+            border-radius: 20px;
+            padding: 2px 8px;
+        }
+
+        .avail-modes { list-style: none; margin: 0; padding: 0; }
+
+        .avail-modes li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 0;
+            font-size: 13px;
+        }
+
+        .avail-modes .st {
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 20px;
+            padding: 2px 10px;
+            white-space: nowrap;
+        }
+
+        .avail-modes .open .st { background: #e3f3ea; color: #28764a; }
+        .avail-modes .low .st { background: #fff0e2; color: #c75300; }
+        .avail-modes .full .st { background: #f3e3e3; color: #b53b3b; }
+        .avail-modes .none .st { background: #ececec; color: #777; }
+        .avail-modes .none .nm, .avail-modes .full .nm { opacity: .55; }
+
+        .avail-note { margin: 16px 0 0; font-size: 12px; opacity: .6; }
+    </style>
 
 </head>
 
@@ -640,8 +793,232 @@
 
 
     <script src="script.js"></script>
+    <script src="slider.js"></script>
 
 
+
+    <!-- DATE RANGE VALIDATOR + DELIVERY AVAILABILITY -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const form = document.getElementById("shipmentSearchForm");
+            const dateInput = document.getElementById("shipmentDate");
+            const categorySelect = document.getElementById("shipmentCategory");
+            const message = document.getElementById("searchResult");
+            const results = document.getElementById("shipmentResults");
+
+            if (!form || !dateInput || !results) return;
+
+            /* ---------- allowed date range: today to Dec 31 of next year ---------- */
+
+            function pad(n) { return String(n).padStart(2, "0"); }
+
+            function toIso(d) {
+                return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+            }
+
+            function fromIso(s) {
+                const p = s.split("-");
+                return new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+            }
+
+            function niceDate(d) {
+                return d.toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" });
+            }
+
+            const today = new Date();
+            const minStr = toIso(today);
+            const maxStr = (today.getFullYear() + 1) + "-12-31";
+
+            dateInput.min = minStr;
+            dateInput.max = maxStr;
+
+            let showingDateError = false;
+
+            function checkDate() {
+
+                const value = dateInput.value;
+                let error = "";
+
+                if (value) {
+                    if (value < minStr) {
+                        error = "Please pick today or a later date.";
+                    } else if (value > maxStr) {
+                        error = "Dates are only available up to " + niceDate(fromIso(maxStr)) + ".";
+                    }
+                }
+
+                dateInput.setCustomValidity(error);
+
+                if (error) {
+                    message.textContent = error;
+                    message.style.color = "#ffb3b3";
+                    showingDateError = true;
+                } else if (showingDateError) {
+                    message.textContent = "";
+                    showingDateError = false;
+                }
+
+                return !error;
+            }
+
+            dateInput.addEventListener("input", checkDate);
+            dateInput.addEventListener("change", checkDate);
+
+            /* ---------- delivery options ---------- */
+
+            const MODES = [
+                { id: "truck", name: "Cargo Truck", icon: "🚚" },
+                { id: "van", name: "Delivery Van", icon: "🚐" },
+                { id: "air", name: "Air Cargo", icon: "✈️" },
+                { id: "sea", name: "Sea Freight", icon: "🚢" },
+                { id: "moto", name: "Motorcycle Courier", icon: "🛵" }
+            ];
+
+            const CATEGORY_MODES = {
+                "All Categories": ["truck", "van", "air", "sea", "moto"],
+                "Raw Materials": ["truck", "sea", "air"],
+                "Electronics": ["van", "air", "truck", "moto"],
+                "Packaging": ["van", "truck", "moto"]
+            };
+
+            function hash(text) {
+                let h = 0;
+                for (let i = 0; i < text.length; i++) {
+                    h = (h * 31 + text.charCodeAt(i)) >>> 0;
+                }
+                return h;
+            }
+
+            /* same date + option always gives the same result */
+            function availability(dateStr, modeId) {
+
+                const day = fromIso(dateStr).getDay();
+
+                if (modeId === "air" && day === 0) {
+                    return { slots: 0, kind: "none", label: "No service" };
+                }
+
+                if (modeId === "sea" && day !== 2 && day !== 4 && day !== 6) {
+                    return { slots: 0, kind: "none", label: "No sailing" };
+                }
+
+                const slots = hash(dateStr + "|" + modeId) % 9;
+
+                if (slots === 0) return { slots: 0, kind: "full", label: "Fully booked" };
+                if (slots <= 3) return { slots: slots, kind: "low", label: slots + " left" };
+                return { slots: slots, kind: "open", label: slots + " slots" };
+            }
+
+            function render(startStr, category) {
+
+                const modeIds = CATEGORY_MODES[category] || CATEGORY_MODES["All Categories"];
+                const modes = MODES.filter(function (m) { return modeIds.indexOf(m.id) !== -1; });
+
+                const start = fromIso(startStr);
+                const days = [];
+
+                for (let i = 0; i < 10; i++) {
+                    const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+                    const iso = toIso(d);
+                    if (iso > maxStr) break;
+                    days.push({ iso: iso, date: d });
+                }
+
+                let earliest = null;
+                let openOptions = 0;
+
+                const cards = days.map(function (day, index) {
+
+                    let anyOpen = false;
+
+                    const items = modes.map(function (mode) {
+                        const a = availability(day.iso, mode.id);
+                        if (a.slots > 0) {
+                            anyOpen = true;
+                            openOptions++;
+                        }
+                        return "<li class='" + a.kind + "'>" +
+                            "<span class='nm'>" + mode.icon + " " + mode.name + "</span>" +
+                            "<span class='st'>" + a.label + "</span></li>";
+                    }).join("");
+
+                    if (anyOpen && !earliest) earliest = day.date;
+
+                    const weekday = day.date.toLocaleDateString("en-PH", { weekday: "short" });
+                    const monthDay = day.date.toLocaleDateString("en-PH", { month: "short", day: "numeric" });
+
+                    return "<div class='avail-card" + (index === 0 ? " selected" : "") + "'>" +
+                        "<div class='avail-date'><strong>" + weekday + ", " + monthDay + "</strong>" +
+                        "<small>" + day.date.getFullYear() + "</small>" +
+                        (index === 0 ? "<span class='avail-tag'>Selected</span>" : "") + "</div>" +
+                        "<ul class='avail-modes'>" + items + "</ul></div>";
+
+                }).join("");
+
+                const earliestText = earliest
+                    ? earliest.toLocaleDateString("en-PH", { weekday: "short", month: "short", day: "numeric", year: "numeric" })
+                    : "None in this range";
+
+                results.innerHTML =
+                    "<div class='avail-panel'>" +
+                        "<div class='avail-head'>" +
+                            "<div>" +
+                                "<span class='avail-eyebrow'>DELIVERY AVAILABILITY</span>" +
+                                "<h3>Available delivery dates</h3>" +
+                                "<p>" + category + " · starting " + niceDate(start) + "</p>" +
+                            "</div>" +
+                            "<div class='avail-summary" + (earliest ? "" : " none") + "'>Earliest open date<strong>" + earliestText + "</strong></div>" +
+                        "</div>" +
+                        "<div class='avail-legend'>" +
+                            "<span style='--dot:#28764a'>Open</span>" +
+                            "<span style='--dot:#ff6a00'>Almost full</span>" +
+                            "<span style='--dot:#b53b3b'>Fully booked</span>" +
+                            "<span style='--dot:#999'>No service</span>" +
+                        "</div>" +
+                        "<div class='avail-grid'>" + cards + "</div>" +
+                        "<p class='avail-note'>Slot counts are sample figures for this demo, not live fleet data.</p>" +
+                    "</div>";
+
+                return { days: days.length, openOptions: openOptions };
+            }
+
+            /* ---------- Find Shipments ---------- */
+
+            /* runs before the old search code in script.js, and replaces it */
+            document.addEventListener("submit", function (event) {
+
+                if (!event.target || event.target.id !== "shipmentSearchForm") return;
+
+                event.preventDefault();
+                event.stopImmediatePropagation();
+
+                if (!dateInput.value) {
+                    message.textContent = "Please select a delivery date.";
+                    message.style.color = "#ffb3b3";
+                    showingDateError = true;
+                    return;
+                }
+
+                if (!checkDate()) return;
+
+                const category = categorySelect ? categorySelect.value : "All Categories";
+                const info = render(dateInput.value, category);
+
+                message.textContent = info.days + " dates checked, " + info.openOptions + " open delivery options.";
+                message.style.color = "#9be3b4";
+                showingDateError = false;
+
+                setTimeout(function () {
+                    results.scrollIntoView({ behavior: "smooth", block: "start" });
+                }, 100);
+
+            }, true);
+
+        });
+    </script>
+
+<script src="order-fixed.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,126 @@
+/* auth-split.css — link this AFTER style.css on login.html and register.html */
+
+/* Optional: put an image in the left panel, e.g. url("images/port.jpg") */
+:root { --auth-side-img: none; }
+
+body.auth-page {
+    min-height: 100vh;
+    height: auto;
+    overflow-y: auto;
+}
+
+.auth-container.auth-wide {
+    width: min(900px, 94vw);
+    max-width: none;
+    margin: 0 auto;
+    padding: 16px 0;
+}
+
+/* ---------- Split card ---------- */
+.auth-card.auth-split {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+}
+
+/* Left panel */
+.auth-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px;
+    color: #fff;
+    background:
+        linear-gradient(160deg, rgba(10, 31, 43, .92), rgba(10, 31, 43, .78)),
+        var(--auth-side-img) center / cover no-repeat,
+        #0f2b3a;
+}
+.auth-side .logo { color: #fff; font-size: 22px; font-weight: 700; text-decoration: none; }
+.auth-side .logo span { color: #ff6a13; }
+.auth-side-text h2 { margin: 0 0 10px; font-size: 26px; line-height: 1.2; color: #fff; }
+.auth-side-text p { margin: 0; font-size: 14px; line-height: 1.6; color: rgba(255, 255, 255, .75); }
+.auth-side small { font-size: 12px; color: rgba(255, 255, 255, .55); }
+
+/* Right panel */
+.auth-main { padding: 28px 32px; background: #fff; }
+.auth-split .eyebrow { margin-bottom: 4px; }
+.auth-split h1 { margin: 0 0 4px; font-size: 26px; }
+.auth-split .auth-description { margin: 0 0 18px; font-size: 13px; }
+
+/* Form grid */
+.auth-form { display: grid; gap: 12px 14px; }
+.auth-grid { grid-template-columns: 1fr 1fr; }
+.auth-form .auth-field { margin: 0; min-width: 0; }
+.auth-form .auth-field.full,
+.auth-form .auth-btn { grid-column: 1 / -1; }
+.auth-form .auth-btn { margin-top: 4px; }
+
+.auth-split .auth-field label { display: block; margin-bottom: 5px; font-size: 13px; }
+.auth-split .auth-field label .optional { font-weight: 400; color: #888; }
+.auth-split .auth-field input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.auth-split .auth-field input.invalid { border-color: #d93025; }
+.field-error { display: block; margin-top: 4px; color: #d93025; font-size: 12px; }
+
+
+.phone-input input { flex: 1; min-width: 0; border-radius: 0 8px 8px 0; }
+
+/* Show / hide password */
+.pw-wrap { position: relative; }
+.pw-wrap input { padding-right: 58px; }
+.pw-toggle {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    border: 0;
+    background: none;
+    color: #ff6a13;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Bottom links */
+.auth-split .auth-message { margin-top: 10px; font-size: 13px; }
+.auth-switch { margin: 14px 0 0; text-align: center; font-size: 13px; color: #666; }
+.auth-switch a { color: #ff6a13; font-weight: 600; text-decoration: none; }
+.auth-switch a:hover { text-decoration: underline; }
+.auth-split .admin-login-box {
+    margin: 8px 0 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: center;
+    font-size: 12px;
+}
+.auth-split .admin-login-box p { display: inline; margin: 0 4px 0 0; color: #888; }
+
+/* ---------- Smaller screens ---------- */
+@media (max-height: 700px) {
+    .auth-main { padding: 20px 28px; }
+    .auth-side { padding: 22px; }
+    .auth-split .auth-description { margin-bottom: 12px; }
+    .auth-form { gap: 9px 12px; }
+}
+
+@media (max-width: 760px) {
+    .auth-card.auth-split { grid-template-columns: 1fr; }
+    .auth-side { padding: 16px 22px; }
+    .auth-side-text, .auth-side small { display: none; }
+    .auth-main { padding: 22px; }
+}
+
+@media (max-width: 480px) {
+    .auth-grid { grid-template-columns: 1fr; }
+}

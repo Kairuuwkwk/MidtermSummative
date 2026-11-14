@@ -2735,8 +2735,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const statTotal = document.querySelector("#statTotalSpent");
         const statDue = document.querySelector("#statAmountDue");
         const statLast = document.querySelector("#statLastPayment");
-        const chart = document.querySelector("#spendingChart");
-        const chartLabels = document.querySelector("#spendingChartLabels");
         const history = document.querySelector("#paymentHistory");
 
         function renderFinance() {
@@ -2775,70 +2773,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 statLast.textContent = formatMoney(lastPayment);
             }
 
-            if (chart && chartLabels) {
-
-                const months = [];
-                const now = new Date();
-
-                for (let i = 5; i >= 0; i--) {
-
-                    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-
-                    months.push({
-                        label: d.toLocaleDateString("en-US", { month: "short" }),
-                        year: d.getFullYear(),
-                        month: d.getMonth(),
-                        total: 0
-                    });
-
-                }
-
-                myOrders.forEach(function (order) {
-
-                    const d = new Date(order.date);
-
-                    const match = months.find(function (m) {
-                        return m.year === d.getFullYear() && m.month === d.getMonth();
-                    });
-
-                    if (match) {
-                        match.total += Number(order.amount);
-                    }
-
-                });
-
-                let maxTotal = 1;
-                months.forEach(function (m) {
-                    if (m.total > maxTotal) {
-                        maxTotal = m.total;
-                    }
-                });
-
-                chart.innerHTML = "";
-                chartLabels.innerHTML = "";
-
-                months.forEach(function (m) {
-
-                    const bar = document.createElement("div");
-                    bar.className = "bar";
-                    bar.title = m.label;
-
-                    const heightPercent =
-                        m.total > 0
-                            ? Math.max(8, Math.round((m.total / maxTotal) * 100))
-                            : 4;
-
-                    bar.style.height = heightPercent + "%";
-
-                    chart.appendChild(bar);
-
-                    const label = document.createElement("span");
-                    label.textContent = m.label;
-                    chartLabels.appendChild(label);
-
-                });
-
-            }
+            window.__financeOrders = myOrders;
 
             if (history) {
 
@@ -2874,6 +2809,365 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         renderFinance();
+
+        /* ---------- REPORT GENERATION (monthly / yearly) ---------- */
+
+        const reportTabs = document.querySelectorAll(".report-tab");
+        const reportMonth = document.querySelector("#reportMonth");
+        const reportYear = document.querySelector("#reportYear");
+        const reportOutput = document.querySelector("#reportOutput");
+        const reportActions = document.querySelector("#reportActions");
+        const generateBtn = document.querySelector("#generateReport");
+        const printBtn = document.querySelector("#printReport");
+        const downloadBtn = document.querySelector("#downloadReport");
+
+        let reportType = "monthly";
+        let currentReport = null;
+
+        function escapeHtml(text) {
+            return String(text == null ? "" : text)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        function setupReportControls() {
+
+            if (!reportMonth || !reportYear) {
+                return;
+            }
+
+            const now = new Date();
+            const mm = String(now.getMonth() + 1).padStart(2, "0");
+            reportMonth.value = now.getFullYear() + "-" + mm;
+
+            const years = [now.getFullYear()];
+            (window.__financeOrders || []).forEach(function (o) {
+                const y = new Date(o.date).getFullYear();
+                if (years.indexOf(y) === -1) {
+                    years.push(y);
+                }
+            });
+            years.sort(function (x, y) { return y - x; });
+
+            reportYear.innerHTML = "";
+            years.forEach(function (y) {
+                const opt = document.createElement("option");
+                opt.value = y;
+                opt.textContent = y;
+                reportYear.appendChild(opt);
+            });
+
+        }
+
+        function buildReport() {
+
+            const orders = window.__financeOrders || [];
+            let title = "";
+            let filtered = [];
+            let breakdown = [];
+
+            if (reportType === "monthly") {
+
+                const parts = (reportMonth.value || "").split("-");
+                if (parts.length !== 2) {
+                    return null;
+                }
+
+                const y = parseInt(parts[0], 10);
+                const m = parseInt(parts[1], 10) - 1;
+
+                title = new Date(y, m, 1).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+                filtered = orders.filter(function (o) {
+                    const d = new Date(o.date);
+                    return d.getFullYear() === y && d.getMonth() === m;
+                });
+
+            } else {
+
+                const y = parseInt(reportYear.value, 10);
+                title = String(y);
+
+                filtered = orders.filter(function (o) {
+                    return new Date(o.date).getFullYear() === y;
+                });
+
+                for (let i = 0; i < 12; i++) {
+                    breakdown.push({
+                        label: new Date(y, i, 1).toLocaleDateString("en-US", { month: "long" }),
+                        count: 0,
+                        total: 0
+                    });
+                }
+
+                filtered.forEach(function (o) {
+                    const idx = new Date(o.date).getMonth();
+                    breakdown[idx].count += 1;
+                    breakdown[idx].total += Number(o.amount);
+                });
+
+            }
+
+            let total = 0;
+            let paid = 0;
+            let due = 0;
+
+            filtered.forEach(function (o) {
+                const amt = Number(o.amount);
+                total += amt;
+                if (o.status === "Delivered") {
+                    paid += amt;
+                } else {
+                    due += amt;
+                }
+            });
+
+            let series = [];
+
+            if (reportType === "yearly") {
+
+                series = breakdown.map(function (row) {
+                    return { label: row.label.slice(0, 3), total: row.total };
+                });
+
+            } else {
+
+                const parts2 = reportMonth.value.split("-");
+                const daysInMonth = new Date(parseInt(parts2[0], 10), parseInt(parts2[1], 10), 0).getDate();
+                const weekRanges = [[1, 7], [8, 14], [15, 21], [22, 28]];
+
+                if (daysInMonth > 28) {
+                    weekRanges.push([29, daysInMonth]);
+                }
+
+                series = weekRanges.map(function (r, i) {
+                    return {
+                        label: "Wk " + (i + 1) + " (" + r[0] + "-" + r[1] + ")",
+                        total: 0
+                    };
+                });
+
+                filtered.forEach(function (o) {
+                    const day = new Date(o.date).getDate();
+                    const idx = Math.min(Math.floor((day - 1) / 7), series.length - 1);
+                    series[idx].total += Number(o.amount);
+                });
+
+            }
+
+            return {
+                type: reportType,
+                title: title,
+                series: series,
+                orders: filtered,
+                breakdown: breakdown,
+                total: total,
+                paid: paid,
+                due: due
+            };
+
+        }
+
+        function compactMoney(n) {
+            n = Number(n);
+            if (n >= 1000000) { return "₱" + (n / 1000000).toFixed(1) + "M"; }
+            if (n >= 1000) { return "₱" + (n / 1000).toFixed(n >= 10000 ? 0 : 1) + "k"; }
+            return "₱" + n;
+        }
+
+        function buildChartHtml(report) {
+
+            let max = 1;
+            report.series.forEach(function (p) {
+                if (p.total > max) { max = p.total; }
+            });
+
+            const heading = report.type === "yearly" ? "Spending per month" : "Spending per week";
+
+            let html = "<div class='report-chart'><div class='rc-heading'>" + heading + "</div><div class='rc-plot'>";
+
+            report.series.forEach(function (p) {
+
+                const pct = p.total > 0 ? Math.max(4, Math.round((p.total / max) * 100)) : 0;
+
+                html += "<div class='rc-col' title='" + escapeHtml(p.label) + ": " + formatMoney(p.total) + "'>" +
+                    "<span class='rc-val'>" + (p.total > 0 ? compactMoney(p.total) : "") + "</span>" +
+                    "<div class='rc-bar' style='height:" + pct + "%'></div></div>";
+
+            });
+
+            html += "</div><div class='rc-labels'>";
+
+            report.series.forEach(function (p) {
+                html += "<span>" + escapeHtml(p.label) + "</span>";
+            });
+
+            html += "</div></div>";
+
+            return html;
+
+        }
+
+        function renderReport(report) {
+
+            if (!report) {
+                reportOutput.innerHTML = "<p class='report-empty'>Please choose a valid period.</p>";
+                reportActions.style.display = "none";
+                return;
+            }
+
+            const heading = (report.type === "monthly" ? "Monthly Report — " : "Yearly Report — ") + report.title;
+
+            let html =
+                "<div class='report-title'>" + escapeHtml(heading) + "</div>" +
+                "<div class='report-summary'>" +
+                    "<div><small>Orders</small><strong>" + report.orders.length + "</strong></div>" +
+                    "<div><small>Total Spent</small><strong>" + formatMoney(report.total) + "</strong></div>" +
+                    "<div><small>Paid</small><strong>" + formatMoney(report.paid) + "</strong></div>" +
+                    "<div><small>Due</small><strong>" + formatMoney(report.due) + "</strong></div>" +
+                "</div>";
+
+            if (report.orders.length === 0) {
+                html += "<p class='report-empty'>No orders found for this period.</p>";
+                reportOutput.innerHTML = html;
+                reportActions.style.display = "none";
+                currentReport = null;
+                return;
+            }
+
+            html += buildChartHtml(report);
+
+            if (report.type === "yearly") {
+
+                html += "<div class='table-wrap'><table class='report-table'><thead><tr>" +
+                    "<th>Month</th><th>Orders</th><th>Amount</th></tr></thead><tbody>";
+
+                report.breakdown.forEach(function (row) {
+                    html += "<tr><td>" + row.label + "</td><td>" + row.count + "</td><td>" +
+                        formatMoney(row.total) + "</td></tr>";
+                });
+
+                html += "</tbody><tfoot><tr><td>Total</td><td>" + report.orders.length + "</td><td>" +
+                    formatMoney(report.total) + "</td></tr></tfoot></table></div>";
+
+            } else {
+
+                html += "<div class='table-wrap'><table class='report-table'><thead><tr>" +
+                    "<th>Order</th><th>Item</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead><tbody>";
+
+                report.orders.forEach(function (o) {
+                    html += "<tr><td>" + escapeHtml(o.id) + "</td><td>" + escapeHtml(o.item) + "</td><td>" +
+                        formatDate(o.date) + "</td><td>" + formatMoney(o.amount) + "</td><td>" +
+                        escapeHtml(o.status) + "</td></tr>";
+                });
+
+                html += "</tbody><tfoot><tr><td colspan='3'>Total</td><td colspan='2'>" +
+                    formatMoney(report.total) + "</td></tr></tfoot></table></div>";
+
+            }
+
+            reportOutput.innerHTML = html;
+            reportActions.style.display = "flex";
+            currentReport = report;
+
+        }
+
+        function downloadCsv() {
+
+            if (!currentReport) {
+                return;
+            }
+
+            const rows = [];
+
+            if (currentReport.type === "yearly") {
+                rows.push(["Month", "Orders", "Amount"]);
+                currentReport.breakdown.forEach(function (r) {
+                    rows.push([r.label, r.count, r.total]);
+                });
+            } else {
+                rows.push(["Order", "Item", "Date", "Amount", "Status"]);
+                currentReport.orders.forEach(function (o) {
+                    rows.push([o.id, o.item, formatDate(o.date), o.amount, o.status]);
+                });
+            }
+
+            rows.push([]);
+            rows.push(["Total Spent", currentReport.total]);
+            rows.push(["Paid", currentReport.paid]);
+            rows.push(["Due", currentReport.due]);
+
+            const csv = rows.map(function (r) {
+                return r.map(function (cell) {
+                    return '"' + String(cell).replace(/"/g, '""') + '"';
+                }).join(",");
+            }).join("\n");
+
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "synchrochain-" + currentReport.type + "-report-" +
+                currentReport.title.replace(/\s+/g, "-").toLowerCase() + ".csv";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+
+        }
+
+        function printReport() {
+
+            if (!currentReport) {
+                return;
+            }
+
+            const win = window.open("", "_blank");
+            if (!win) {
+                toast("Allow pop-ups to print the report.", "error");
+                return;
+            }
+
+            win.document.write(
+                "<html><head><title>SynchroChain Report</title>" +
+                "<style>body{font-family:Arial,sans-serif;padding:30px;color:#17252b}" +
+                "table{width:100%;border-collapse:collapse;margin-top:15px}" +
+                "th,td{border:1px solid #ccc;padding:8px;text-align:left}" +
+                ".report-summary{display:flex;gap:30px;margin:15px 0}" +
+                ".report-summary small{display:block;color:#777}" +
+                ".rc-plot{display:flex;align-items:flex-end;gap:8px;height:200px;border-bottom:1px solid #ccc}" +
+                ".rc-col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}" +
+                ".rc-bar{width:100%;background:#102d38;-webkit-print-color-adjust:exact;print-color-adjust:exact}" +
+                ".rc-val{font-size:11px}.rc-labels{display:flex;gap:8px}.rc-labels span{flex:1;text-align:center;font-size:11px}" +
+                ".rc-heading{font-weight:700;margin-top:15px}</style></head><body>" +
+                "<h2>SynchroChain®</h2>" + reportOutput.innerHTML + "</body></html>"
+            );
+            win.document.close();
+            win.focus();
+            win.print();
+
+        }
+
+        reportTabs.forEach(function (tab) {
+            tab.addEventListener("click", function () {
+                reportTabs.forEach(function (t) { t.classList.remove("active"); });
+                tab.classList.add("active");
+                reportType = tab.dataset.type;
+                reportMonth.style.display = reportType === "monthly" ? "" : "none";
+                reportYear.style.display = reportType === "yearly" ? "" : "none";
+            });
+        });
+
+        if (generateBtn) {
+            generateBtn.addEventListener("click", function () {
+                renderReport(buildReport());
+            });
+        }
+
+        if (downloadBtn) { downloadBtn.addEventListener("click", downloadCsv); }
+        if (printBtn) { printBtn.addEventListener("click", printReport); }
+
+        setupReportControls();
 
     }
 

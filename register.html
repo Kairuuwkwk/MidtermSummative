@@ -6,102 +6,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account | SynchroChain</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth-split.css">
 </head>
 
 <body class="auth-page">
 
-    <div class="auth-container">
+    <div class="auth-container auth-wide">
 
-        <div class="auth-brand">
+        <div class="auth-card auth-split">
 
-            <a href="login.html" class="logo">SynchroChain<span>®</span></a>
+            <aside class="auth-side">
+                <a href="login.html" class="logo">SynchroChain<span>®</span></a>
 
-            <p>Supply Chain Management System</p>
-
-        </div>
-
-        <div class="auth-card">
-
-            <div class="eyebrow">USER REGISTRATION</div>
-
-            <h1>Create Account</h1>
-
-            <p class="auth-description">
-                Register a normal user account to access
-                the SCM dashboard.
-            </p>
-
-            <form id="registerForm">
-
-                <div class="auth-field">
-
-                    <label for="registerName">Full Name</label>
-
-                    <input
-                        type="text"
-                        id="registerName"
-                        placeholder="Enter your full name"
-                        autocomplete="name"
-                        required
-                    >
-
+                <div class="auth-side-text">
+                    <h2>Join SynchroChain</h2>
+                    <p>Create your account to browse products, place orders, and track your deliveries and spending in one place.</p>
                 </div>
 
-                <div class="auth-field">
+                <small>Supply Chain Management System</small>
+            </aside>
 
-                    <label for="registerEmail">Email Address</label>
+            <div class="auth-main">
 
-                    <input
-                        type="email"
-                        id="registerEmail"
-                        placeholder="Enter your email"
-                        autocomplete="email"
-                        required
-                    >
+                <div class="eyebrow">USER REGISTRATION</div>
+                <h1>Create Account</h1>
+                <p class="auth-description">Register a user account to access the SCM dashboard.</p>
 
-                </div>
+                <form id="registerForm" class="auth-form auth-grid" novalidate>
 
-                <div class="auth-field">
+                    <!-- Kept so script.js still finds #registerName. Filled automatically from the name fields. -->
+                    <input type="hidden" id="registerName">
 
-                    <label for="registerPassword">Password</label>
+                    <div class="auth-field">
+                        <label for="registerFirstName">First Name</label>
+                        <input type="text" id="registerFirstName" placeholder="First name"
+                               autocomplete="given-name" maxlength="40" required>
+                    </div>
 
-                    <input
-                        type="password"
-                        id="registerPassword"
-                        placeholder="Create a password"
-                        minlength="6"
-                        autocomplete="new-password"
-                        required
-                    >
+                    <div class="auth-field">
+                        <label for="registerLastName">Last Name</label>
+                        <input type="text" id="registerLastName" placeholder="Last name"
+                               autocomplete="family-name" maxlength="40" required>
+                    </div>
 
-                </div>
+                    <div class="auth-field">
+                        <label for="registerMiddleName">Middle Name <span class="optional">(optional)</span></label>
+                        <input type="text" id="registerMiddleName" placeholder="Middle name"
+                               autocomplete="additional-name" maxlength="40">
+                    </div>
 
-                <div class="auth-field">
+                    <div class="auth-field">
+                        <label for="registerMobile">Mobile Number</label>
+                        <div class="phone-input">
+                            <input type="tel" id="registerMobile" placeholder="9XXXXXXXXX"
+                                   inputmode="numeric" maxlength="10" autocomplete="tel-national" required>
+                        </div>
+                    </div>
 
-                    <label for="registerConfirm">Confirm Password</label>
+                    <div class="auth-field full">
+                        <label for="registerEmail">Email Address</label>
+                        <input type="email" id="registerEmail" placeholder="Enter your email"
+                               autocomplete="email" required>
+                    </div>
 
-                    <input
-                        type="password"
-                        id="registerConfirm"
-                        placeholder="Confirm your password"
-                        minlength="6"
-                        autocomplete="new-password"
-                        required
-                    >
+                    <div class="auth-field">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" placeholder="Create a password"
+                               minlength="6" autocomplete="new-password" required>
+                    </div>
 
-                </div>
+                    <div class="auth-field">
+                        <label for="registerConfirm">Confirm Password</label>
+                        <input type="password" id="registerConfirm" placeholder="Confirm your password"
+                               minlength="6" autocomplete="new-password" required>
+                    </div>
 
-                <button type="submit" class="btn auth-btn">Create Account</button>
+                    <button type="submit" class="btn auth-btn">Create Account</button>
 
-            </form>
+                </form>
 
-            <div id="registerMessage" class="auth-message"></div>
+                <div id="registerMessage" class="auth-message"></div>
 
-            <div class="auth-divider">
-                <span>OR</span>
+                <p class="auth-switch">Already have an account? <a href="login.html">Back to Login</a></p>
+
             </div>
-
-            <a href="login.html" class="auth-secondary-btn">Back to Login</a>
 
         </div>
 
@@ -110,6 +98,9 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="register-validation.js"></script>
+    <script src="auth-ui.js"></script>
+    <script src="order-autofill.js"></script>
 
 </body>
 

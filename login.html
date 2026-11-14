@@ -6,77 +6,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | SynchroChain</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth-split.css">
 </head>
 
 <body class="auth-page">
 
-    <div class="auth-container">
+    <div class="auth-container auth-wide">
 
-        <div class="auth-brand">
+        <div class="auth-card auth-split">
 
-            <a href="login.html" class="logo">SynchroChain<span>®</span></a>
+            <aside class="auth-side">
+                <a href="login.html" class="logo">SynchroChain<span>®</span></a>
 
-            <p>Supply Chain Management System</p>
-
-        </div>
-
-        <div class="auth-card">
-
-            <div class="eyebrow">USER LOGIN</div>
-
-            <h1>Welcome Back</h1>
-
-            <p class="auth-description">
-                Sign in to access your supply chain dashboard.
-            </p>
-
-            <form id="loginForm">
-
-                <div class="auth-field">
-
-                    <label for="loginEmail">Email Address</label>
-
-                    <input
-                        type="email"
-                        id="loginEmail"
-                        placeholder="Enter your email"
-                        autocomplete="email"
-                        required
-                    >
-
+                <div class="auth-side-text">
+                    <h2>Welcome Back</h2>
+                    <p>Please log in using your account to access your supply chain dashboard.</p>
                 </div>
 
-                <div class="auth-field">
+                <small>Supply Chain Management System</small>
+            </aside>
 
-                    <label for="loginPassword">Password</label>
+            <div class="auth-main">
 
-                    <input
-                        type="password"
-                        id="loginPassword"
-                        placeholder="Enter your password"
-                        autocomplete="current-password"
-                        required
-                    >
+                <div class="eyebrow">USER LOGIN</div>
+                <h1>Login</h1>
+                <p class="auth-description">Sign in to access your supply chain dashboard.</p>
 
+                <form id="loginForm" class="auth-form">
+
+                    <div class="auth-field">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email"
+                               autocomplete="email" required>
+                    </div>
+
+                    <div class="auth-field">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password"
+                               autocomplete="current-password" required>
+                    </div>
+
+                    <button type="submit" class="btn auth-btn">Login</button>
+
+                </form>
+
+                <div id="loginMessage" class="auth-message"></div>
+
+                <p class="auth-switch">Don't have an account? <a href="register.html">Create User Account</a></p>
+
+                <div class="admin-login-box">
+                    <p>Are you an administrator?</p>
+                    <a href="admin-login.html" class="admin-login-link">Administrator Login</a>
                 </div>
-
-                <button type="submit" class="btn auth-btn">Login</button>
-
-            </form>
-
-            <div id="loginMessage" class="auth-message"></div>
-
-            <div class="auth-divider">
-                <span>OR</span>
-            </div>
-
-            <a href="register.html" class="auth-secondary-btn">Create User Account</a>
-
-            <div class="admin-login-box">
-
-                <p>Are you an administrator?</p>
-
-                <a href="admin-login.html" class="admin-login-link">Administrator Login</a>
 
             </div>
 
@@ -87,6 +68,7 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="auth-ui.js"></script>
 
 </body>
 
