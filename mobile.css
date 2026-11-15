@@ -1,0 +1,217 @@
+/* mobile.css - link LAST in <head> on every page (after style.css, auth-split.css, admin.css and any inline <style>) */
+
+/* ---------- Everywhere ---------- */
+html { -webkit-text-size-adjust: 100%; }
+img, svg, video { max-width: 100%; height: auto; }
+body { overflow-x: clip; }
+a, button { -webkit-tap-highlight-color: transparent; }
+button, .btn, select { touch-action: manipulation; }
+
+/* ---------- Hamburger menu (tablet and phone) ---------- */
+@media (max-width: 980px) {
+
+    .navbar { padding-left: 16px !important; padding-right: 16px !important; z-index: 1000; }
+
+    .navbar .mobile-menu {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        margin-left: auto;
+        padding: 0;
+        border: 1px solid rgba(255, 255, 255, .3);
+        border-radius: 10px;
+        background: transparent;
+        color: #fff;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .navbar .nav-links { display: none !important; }
+
+    body.nav-open .navbar .nav-links {
+        display: flex !important;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        max-height: calc(100vh - 90px);
+        overflow-y: auto;
+        padding: 12px 16px 20px;
+        background: #0f2b3a;
+        box-shadow: 0 18px 30px rgba(0, 0, 0, .35);
+    }
+
+    body.nav-open .navbar .nav-links > a,
+    body.nav-open .navbar .nav-links > button {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 13px 14px;
+        border-radius: 8px;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    body.nav-open .navbar .nav-links > .contact-btn,
+    body.nav-open .navbar .nav-links > .logout-btn { text-align: center; }
+    body.nav-open .navbar .nav-links > .user-chip { align-self: flex-start; }
+}
+
+/* ---------- Phones and small tablets ---------- */
+@media (max-width: 768px) {
+
+    /* comfortable tap targets, and 16px text so iPhones don't zoom into fields */
+    input, select, textarea { font-size: 16px !important; }
+    .btn, button.btn, a.btn { min-height: 44px; }
+    .admin-small-btn { min-height: 40px; }
+
+    /* page headers */
+    .page-header { padding-top: 28px; padding-bottom: 28px; }
+    .page-header h1 { font-size: clamp(30px, 9vw, 44px) !important; line-height: 1.1; }
+    .page-header p { font-size: 15px; }
+
+    .content { width: 94%; }
+
+    /* toolbars: search and filters stack */
+    .toolbar { flex-direction: column; align-items: stretch; gap: 10px; }
+    .toolbar input, .toolbar select, .toolbar .search { width: 100%; max-width: none; box-sizing: border-box; }
+
+    /* ----- Home page ----- */
+    .hero { height: auto !important; min-height: 0 !important; padding-top: 40px; padding-bottom: 44px; }
+    .hero h1 { font-size: clamp(34px, 11vw, 52px) !important; line-height: 1.05; }
+    .hero p { font-size: 16px; }
+    .hero .search-card { width: 100% !important; max-width: none !important; padding: 20px; box-sizing: border-box; }
+    .search-card .form-row { display: flex !important; flex-direction: column; align-items: stretch; gap: 10px; }
+    .search-card input, .search-card select, .search-card .btn { width: 100%; box-sizing: border-box; }
+
+    .avail-panel { padding: 16px !important; }
+    .avail-head h3 { font-size: 19px !important; }
+    .avail-summary { width: 100%; box-sizing: border-box; }
+
+    .section { padding-top: 44px; padding-bottom: 44px; }
+    .intro-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+    .section h2, .cta h2 { font-size: clamp(26px, 7.5vw, 38px) !important; line-height: 1.15; }
+    .stats { grid-template-columns: repeat(2, 1fr) !important; }
+    .stat { padding: 18px !important; }
+    .stat strong { font-size: 28px !important; }
+    .flow-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+    /* the image slider */
+    .image-card.slider { min-height: 340px; }
+    .sl-cap { padding: 48px 16px 16px; }
+    .sl-cap h3 { font-size: 17px; }
+    .sl-cap p { font-size: 12px; margin-bottom: 8px; }
+    .sl-btn { width: 30px; height: 30px; top: 30%; }
+
+    /* ----- Footer ----- */
+    .footer-inner { flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+
+    /* ----- Deliveries ----- */
+    #deliveryList > * { display: flex !important; flex-direction: column; align-items: stretch; gap: 12px; }
+    #deliveryList > * > * { width: 100% !important; box-sizing: border-box; }
+    .tracking-card { padding: 20px 14px; }
+    .tracking-card h2 { font-size: 22px; }
+    .timeline .step span { font-size: 11px; text-align: center; }
+
+    /* ----- Popups ----- */
+    .product-modal-box, .sup-modal-box, .ad-modal-box {
+        width: 96vw !important;
+        max-width: 96vw !important;
+        max-height: 92vh !important;
+        overflow-y: auto;
+        box-sizing: border-box;
+    }
+    .sup-modal-box, .ad-modal-box { padding: 22px 18px; }
+    .product-modal-box [class*="grid"],
+    .product-modal-box [class*="row"] { grid-template-columns: 1fr !important; flex-wrap: wrap; }
+    .product-modal-box input, .product-modal-box select, .product-modal-box textarea { max-width: 100%; box-sizing: border-box; }
+
+    /* ----- Suppliers ----- */
+    .suppliers-scroll, .admin-scroll { max-height: none !important; }
+    .sup-tags { justify-content: flex-end; }
+    .sup-pop { display: none !important; }
+
+    /* ----- Admin ----- */
+    .admin-title-actions { flex-wrap: wrap; }
+    .admin-section-title { flex-wrap: wrap; gap: 10px; }
+    .admin-inline-form { grid-template-columns: 1fr !important; }
+    .ad-list div { grid-template-columns: 110px 1fr; }
+}
+
+/* ---------- Tables become stacked cards on phones (mobile-nav.js adds the labels) ---------- */
+@media (max-width: 700px) {
+
+    .table-wrap {
+        overflow: visible !important;
+        max-height: none !important;
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    table.m-stack, table.m-stack tbody { display: block; width: 100%; min-width: 0 !important; }
+    table.m-stack thead { display: none; }
+
+    table.m-stack tr {
+        display: block;
+        margin: 0 0 12px;
+        padding: 4px 14px;
+        background: #fff;
+        border: 1px solid #e4e2dc;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(16, 45, 56, .06);
+    }
+
+    table.m-stack td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        width: auto;
+        padding: 10px 0 !important;
+        border: 0 !important;
+        border-bottom: 1px solid #f0eee8 !important;
+        background: transparent !important;
+        text-align: right;
+        font-size: 14px;
+    }
+
+    table.m-stack td:last-child { border-bottom: 0 !important; }
+
+    table.m-stack td::before {
+        content: attr(data-label);
+        flex: 0 0 34%;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        opacity: .55;
+    }
+    table.m-stack td:not([data-label])::before { display: none; }
+
+    table.m-stack td[colspan] { display: block; text-align: center; }
+    table.m-stack td .admin-actions { margin-left: auto; }
+    table.m-stack td input, table.m-stack td select { max-width: 55%; }
+}
+
+@media (max-width: 480px) {
+    .stats { grid-template-columns: 1fr 1fr !important; }
+    .cards { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 640px) {
+    .cards { grid-template-columns: 1fr !important; }
+}
+
+/* touch screens have no hover, so skip hover-only extras */
+@media (hover: none) {
+    .sup-pop { display: none !important; }
+}

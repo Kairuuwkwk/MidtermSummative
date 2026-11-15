@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | SynchroChain</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="mobile.css">
+
 </head>
 
 <body data-page="admin">
@@ -28,143 +31,259 @@
         </div>
     </header>
 
-    <main class="content">
+    <main class="admin-shell">
 
-        <div class="admin-tabs">
-            <button type="button" class="admin-tab active" data-tab="panel-overview">Overview</button>
-            <button type="button" class="admin-tab" data-tab="panel-products">Products</button>
-            <button type="button" class="admin-tab" data-tab="panel-orders">Orders</button>
-            <button type="button" class="admin-tab" data-tab="panel-users">Users</button>
-            <button type="button" class="admin-tab" data-tab="panel-activity">Activity</button>
-            <button type="button" class="admin-tab" data-tab="panel-system">System</button>
+        <!-- SIDEBAR (the buttons keep the admin-tab / data-tab names used by the scripts) -->
+        <aside class="admin-sidebar" aria-label="Admin sections">
+            <div class="admin-side-title">MANAGE</div>
+            <button type="button" class="admin-tab active" data-tab="panel-overview"><span class="ico">📊</span>Overview</button>
+            <button type="button" class="admin-tab" data-tab="panel-products"><span class="ico">📦</span>Products<span class="tab-count" id="tabProductsCount" hidden></span></button>
+            <button type="button" class="admin-tab" data-tab="panel-orders"><span class="ico">🧾</span>Orders<span class="tab-count" id="tabOrdersCount" hidden></span></button>
+            <button type="button" class="admin-tab" data-tab="panel-users"><span class="ico">👥</span>Users</button>
+            <button type="button" class="admin-tab" data-tab="panel-activity"><span class="ico">🕒</span>Activity</button>
+            <button type="button" class="admin-tab" data-tab="panel-system"><span class="ico">⚙️</span>System</button>
+
+            <div class="admin-side-foot">Signed in as<strong class="current-user">Eric</strong></div>
+        </aside>
+
+        <div class="admin-main">
+
+            <!-- OVERVIEW -->
+            <section class="admin-panel active" id="panel-overview">
+
+                <div class="ov-cards">
+                    <div class="ov-card"><small>Total Sales</small><h3 id="ovSales">₱0</h3><div class="sub">All orders</div></div>
+                    <div class="ov-card"><small>Total Orders</small><h3 id="ovOrders">0</h3><div class="sub" id="ovOrdersSub">&nbsp;</div></div>
+                    <div class="ov-card warn"><small>Processing</small><h3 id="ovProcessing">0</h3><div class="sub">Waiting to ship</div></div>
+                    <div class="ov-card"><small>In Transit</small><h3 id="ovTransit">0</h3><div class="sub">On the way</div></div>
+                    <div class="ov-card warn"><small>Low Stock</small><h3 id="ovLow">0</h3><div class="sub">5 units or fewer</div></div>
+                    <div class="ov-card danger"><small>Out of Stock</small><h3 id="ovOut">0</h3><div class="sub">Needs restocking</div></div>
+                    <div class="ov-card"><small>Registered Users</small><h3 id="adminUserCount">0</h3><div class="sub">Customer accounts</div></div>
+                    <div class="ov-card"><small>Activity Records</small><h3 id="adminActivityCount">0</h3><div class="sub">Logged actions</div></div>
+                </div>
+
+                <div class="ov-grid">
+                    <div class="admin-section-card">
+                        <div class="admin-section-title"><h2>Orders waiting to ship</h2></div>
+                        <div id="ovWaiting"></div>
+                    </div>
+                    <div class="admin-section-card">
+                        <div class="admin-section-title"><h2>Stock alerts</h2></div>
+                        <div id="ovStock"></div>
+                    </div>
+                </div>
+
+                <div class="ov-grid">
+                    <div class="admin-section-card">
+                        <div class="admin-section-title"><h2>Orders by status</h2></div>
+                        <div id="ovStatusChart"></div>
+                    </div>
+                    <div class="admin-section-card">
+                        <div class="admin-section-title"><h2>Sales by category</h2></div>
+                        <div id="ovCategoryChart"></div>
+                    </div>
+                </div>
+
+                <div class="admin-section-card">
+                    <div class="admin-section-title"><h2>Recent orders</h2></div>
+                    <div class="table-wrap">
+                        <table id="ovRecentTable">
+                            <thead><tr><th>Order</th><th>Customer</th><th>Item</th><th>Amount</th><th>Status</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- PRODUCTS -->
+            <section class="admin-panel" id="panel-products">
+
+                <div class="admin-section-card">
+
+                    <div class="admin-section-title"><h2>Add a Product</h2></div>
+
+                    <form id="addProductForm" class="admin-inline-form">
+                        <div class="auth-field">
+                            <label for="newProductName">Name</label>
+                            <input type="text" id="newProductName" required>
+                        </div>
+                        <div class="auth-field">
+                            <label for="newProductCategory">Category</label>
+                            <select id="newProductCategory" required>
+                                <option value="">Select category</option>
+                                <option>Electronics</option>
+                                <option>Accessories</option>
+                                <option>Packaging</option>
+                                <option>Raw Materials</option>
+                            </select>
+                        </div>
+                        <div class="auth-field">
+                            <label for="newProductPrice">Price (₱)</label>
+                            <input type="number" id="newProductPrice" min="0" step="1" required>
+                        </div>
+                        <div class="auth-field">
+                            <label for="newProductStock">Stock</label>
+                            <input type="number" id="newProductStock" min="0" step="1" required>
+                        </div>
+                        <button type="submit" class="btn">Add Product</button>
+                    </form>
+
+                </div>
+
+                <div class="admin-section-card">
+                    <div class="admin-section-title"><h2>All Products</h2></div>
+
+                    <div class="admin-toolbar">
+                        <input id="prodSearch" type="text" placeholder="Search products...">
+                        <select id="prodFilter">
+                            <option value="">All stock levels</option>
+                            <option>In Stock</option>
+                            <option>Low Stock</option>
+                            <option>Out of Stock</option>
+                        </select>
+                    </div>
+
+                    <div class="table-wrap admin-scroll">
+                        <table id="adminProductsTable">
+                            <thead>
+                                <tr><th>Name</th><th>Category</th><th>Price (₱)</th><th>Stock</th><th>Status</th><th></th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ORDERS -->
+            <section class="admin-panel" id="panel-orders">
+
+                <div class="admin-section-card">
+                    <div class="admin-section-title"><h2>All Orders</h2></div>
+
+                    <div class="admin-toolbar">
+                        <input id="ordSearch" type="text" placeholder="Search order, customer or item...">
+                        <select id="ordFilter">
+                            <option value="">All statuses</option>
+                            <option>Processing</option>
+                            <option>In Transit</option>
+                            <option>Delivered</option>
+                        </select>
+                    </div>
+
+                    <div class="table-wrap admin-scroll">
+                        <table id="adminOrdersTable">
+                            <thead>
+                                <tr><th>Order</th><th>Customer</th><th>Item</th><th>Date</th><th>Amount</th><th>Courier</th><th>Destination</th><th>Status</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <p class="sys-note">Click a row to see the full order details.</p>
+                </div>
+
+            </section>
+
+            <!-- USERS -->
+            <section class="admin-panel" id="panel-users">
+                <div class="admin-section-card">
+                    <div class="admin-section-title"><h2>Registered Users</h2></div>
+
+                    <div class="admin-toolbar">
+                        <input id="userSearch" type="text" placeholder="Search users...">
+                    </div>
+
+                    <div class="table-wrap admin-scroll">
+                        <table id="usersTable">
+                            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Created</th><th>Orders</th><th>Spent</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ACTIVITY -->
+            <section class="admin-panel" id="panel-activity">
+                <div class="admin-section-card">
+                    <div class="admin-section-title">
+                        <h2>Recent Activity</h2>
+                        <div class="admin-title-actions">
+                            <button type="button" class="btn admin-small-btn btn-ghost" id="exportActivity">Export CSV</button>
+                            <button type="button" class="btn admin-small-btn" id="clearActivity">Clear Activity</button>
+                        </div>
+                    </div>
+
+                    <div class="admin-toolbar">
+                        <input id="actSearch" type="text" placeholder="Search activity...">
+                        <select id="actFilter">
+                            <option value="">All types</option>
+                            <option value="login">Logins</option>
+                            <option value="logout">Logouts</option>
+                            <option value="register">Registrations</option>
+                            <option value="order">Orders</option>
+                            <option value="product">Products</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="table-wrap admin-scroll">
+                        <table id="activityTable">
+                            <thead><tr><th>Action</th><th>Details</th><th>Time</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <p class="sys-note" id="actCount"></p>
+                </div>
+            </section>
+
+            <!-- SYSTEM -->
+            <section class="admin-panel" id="panel-system">
+
+                <div class="admin-section-card">
+                    <div class="admin-section-title"><h2>System Information</h2></div>
+                    <div class="system-grid">
+                        <div class="system-item"><span>Data Storage</span><strong>Browser localStorage</strong></div>
+                        <div class="system-item"><span>Admin Login</span><strong>Fixed administrator account</strong></div>
+                        <div class="system-item"><span>User Passwords</span><strong>Plain text (demo only)</strong></div>
+                        <div class="system-item"><span>Status</span><strong>Running</strong></div>
+                        <div class="system-item"><span>Stored Data</span><strong id="sysStorage">-</strong></div>
+                    </div>
+                </div>
+
+                <div class="admin-section-card">
+                    <div class="admin-section-title"><h2>Backup and Restore</h2></div>
+                    <p class="sys-note" style="margin-top:0">Download all saved data (users, products, orders, activity) as a file, or load a backup file back in.</p>
+                    <div class="sys-actions">
+                        <button type="button" class="btn admin-small-btn" id="backupBtn">Download Backup</button>
+                        <button type="button" class="btn admin-small-btn btn-ghost" id="restoreBtn">Restore from File</button>
+                        <input type="file" id="restoreFile" accept="application/json,.json" hidden>
+                    </div>
+                    <p class="sys-note">Backups contain user passwords in plain text, so keep the file private.</p>
+                </div>
+
+                <div class="admin-section-card danger-zone">
+                    <div class="admin-section-title"><h2>Danger Zone</h2></div>
+                    <div class="danger-row">
+                        <p>Permanently delete every registered user account. You will be asked to type DELETE first.</p>
+                        <button type="button" class="btn admin-small-btn btn-danger" id="clearUsers">Delete All Users</button>
+                    </div>
+                </div>
+
+            </section>
+
         </div>
 
-        <!-- OVERVIEW -->
-        <section class="admin-panel active" id="panel-overview">
-
-            <div class="cards">
-                <div class="card admin-stat-card"><small>Registered Users</small><h3 id="adminUserCount">0</h3></div>
-                <div class="card admin-stat-card"><small>Activity Records</small><h3 id="adminActivityCount">0</h3></div>
-                <div class="card admin-stat-card"><small>Access Level</small><h3>Admin</h3></div>
-            </div>
-
-            <div class="admin-section-card">
-                <div class="admin-section-title"><h2>Current Session</h2></div>
-                <div class="session-info">
-                    <div class="session-item"><span>Name</span><strong class="current-user">Eric</strong></div>
-                    <div class="session-item"><span>Role</span><strong>Administrator</strong></div>
-                    <div class="session-item"><span>Username</span><strong>Eric</strong></div>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- PRODUCTS -->
-        <section class="admin-panel" id="panel-products">
-
-            <div class="admin-section-card">
-
-                <div class="admin-section-title"><h2>Add a Product</h2></div>
-
-                <form id="addProductForm" class="admin-inline-form">
-                    <div class="auth-field">
-                        <label for="newProductName">Name</label>
-                        <input type="text" id="newProductName" required>
-                    </div>
-                    <div class="auth-field">
-                        <label for="newProductCategory">Category</label>
-                        <input type="text" id="newProductCategory" required>
-                    </div>
-                    <div class="auth-field">
-                        <label for="newProductPrice">Price (₱)</label>
-                        <input type="number" id="newProductPrice" min="0" step="1" required>
-                    </div>
-                    <div class="auth-field">
-                        <label for="newProductStock">Stock</label>
-                        <input type="number" id="newProductStock" min="0" step="1" required>
-                    </div>
-                    <button type="submit" class="btn">Add Product</button>
-                </form>
-
-            </div>
-
-            <div class="admin-section-card">
-                <div class="admin-section-title"><h2>All Products</h2></div>
-                <div class="table-wrap">
-                    <table id="adminProductsTable">
-                        <thead>
-                            <tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th></th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- ORDERS -->
-        <section class="admin-panel" id="panel-orders">
-
-            <div class="admin-section-card">
-                <div class="admin-section-title"><h2>All Orders</h2></div>
-                <div class="table-wrap">
-                    <table id="adminOrdersTable">
-                        <thead>
-                            <tr><th>Order</th><th>Customer</th><th>Item</th><th>Amount</th><th>Status</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- USERS -->
-        <section class="admin-panel" id="panel-users">
-            <div class="admin-section-card">
-                <div class="admin-section-title">
-                    <h2>Registered Users</h2>
-                    <button type="button" class="btn admin-small-btn" id="clearUsers">Delete All Users</button>
-                </div>
-                <div class="table-wrap">
-                    <table id="usersTable">
-                        <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Created</th></tr></thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- ACTIVITY -->
-        <section class="admin-panel" id="panel-activity">
-            <div class="admin-section-card">
-                <div class="admin-section-title">
-                    <h2>Recent Activity</h2>
-                    <button type="button" class="btn admin-small-btn" id="clearActivity">Clear Activity</button>
-                </div>
-                <div class="table-wrap">
-                    <table id="activityTable">
-                        <thead><tr><th>Action</th><th>Details</th><th>Time</th></tr></thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- SYSTEM -->
-        <section class="admin-panel" id="panel-system">
-            <div class="admin-section-card">
-                <div class="admin-section-title"><h2>System Information</h2></div>
-                <div class="system-grid">
-                    <div class="system-item"><span>Data Storage</span><strong>Browser localStorage</strong></div>
-                    <div class="system-item"><span>Admin Login</span><strong>Fixed administrator account</strong></div>
-                    <div class="system-item"><span>User Passwords</span><strong>Plain text (demo only)</strong></div>
-                    <div class="system-item"><span>Status</span><strong>Running</strong></div>
-                </div>
-            </div>
-        </section>
-
     </main>
+
+    <!-- Order details popup -->
+    <div class="ad-modal" id="orderModal">
+        <div class="ad-modal-box" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
+            <button type="button" class="ad-close" id="orderModalClose" aria-label="Close">×</button>
+            <h2 id="orderModalTitle">Order</h2>
+            <dl class="ad-list" id="orderModalBody"></dl>
+        </div>
+    </div>
 
     <footer>
         <div class="footer-inner">
@@ -174,201 +293,7 @@
     </footer>
 
     <script src="script.js"></script>
-
-    <script>
-
-        document.addEventListener("DOMContentLoaded", function () {
-
-            /* TAB SWITCHING */
-
-            document.querySelectorAll(".admin-tab").forEach(function (tab) {
-                tab.addEventListener("click", function () {
-                    document.querySelectorAll(".admin-tab").forEach(t => t.classList.remove("active"));
-                    document.querySelectorAll(".admin-panel").forEach(p => p.classList.remove("active"));
-                    tab.classList.add("active");
-                    document.getElementById(tab.dataset.tab).classList.add("active");
-                });
-            });
-
-            const data = window.SynchroData;
-            if (!data) return;
-
-            /* PRODUCTS MANAGEMENT */
-
-            const productsBody = document.querySelector("#adminProductsTable tbody");
-            const addProductForm = document.querySelector("#addProductForm");
-
-            function renderAdminProducts() {
-
-                const products = data.getProducts();
-
-                if (!productsBody) return;
-
-                productsBody.innerHTML = "";
-
-                if (products.length === 0) {
-                    productsBody.innerHTML = "<tr class='empty-row'><td colspan='5'>No products yet. Add one above.</td></tr>";
-                    return;
-                }
-
-                products.forEach(function (product) {
-
-                    const row = document.createElement("tr");
-                    row.innerHTML =
-                        "<td>" + product.name + "</td>" +
-                        "<td>" + product.category + "</td>" +
-                        "<td><input type='number' min='0' step='1' class='admin-inline-input' data-field='price' value='" + product.price + "'></td>" +
-                        "<td><input type='number' min='0' step='1' class='admin-inline-input' data-field='stock' value='" + product.stock + "'></td>" +
-                        "<td></td>";
-
-                    const actionCell = row.querySelector("td:last-child");
-
-                    const saveBtn = document.createElement("button");
-                    saveBtn.type = "button";
-                    saveBtn.className = "btn admin-small-btn";
-                    saveBtn.textContent = "Save";
-                    saveBtn.addEventListener("click", function () {
-
-                        const priceInput = row.querySelector("[data-field='price']");
-                        const stockInput = row.querySelector("[data-field='stock']");
-
-                        const fresh = data.getProducts();
-                        const target = fresh.find(p => p.id === product.id);
-                        if (!target) return;
-
-                        target.price = Math.max(0, parseFloat(priceInput.value) || 0);
-                        target.stock = Math.max(0, parseInt(stockInput.value, 10) || 0);
-
-                        data.saveProducts(fresh);
-
-                        if (typeof showToast === "function") showToast("Product updated.");
-                    });
-
-                    const deleteBtn = document.createElement("button");
-                    deleteBtn.type = "button";
-                    deleteBtn.className = "btn admin-small-btn btn-ghost";
-                    deleteBtn.textContent = "Delete";
-                    deleteBtn.style.marginLeft = "8px";
-                    deleteBtn.addEventListener("click", function () {
-
-                        if (!confirm("Delete " + product.name + "?")) return;
-
-                        const fresh = data.getProducts().filter(p => p.id !== product.id);
-                        data.saveProducts(fresh);
-                        renderAdminProducts();
-
-                        if (typeof showToast === "function") showToast("Product deleted.");
-                    });
-
-                    actionCell.appendChild(saveBtn);
-                    actionCell.appendChild(deleteBtn);
-
-                    productsBody.appendChild(row);
-
-                });
-
-            }
-
-            if (addProductForm) {
-                addProductForm.addEventListener("submit", function (event) {
-
-                    event.preventDefault();
-
-                    const name = document.querySelector("#newProductName").value.trim();
-                    const category = document.querySelector("#newProductCategory").value.trim();
-                    const price = parseFloat(document.querySelector("#newProductPrice").value) || 0;
-                    const stock = parseInt(document.querySelector("#newProductStock").value, 10) || 0;
-
-                    if (!name || !category) {
-                        if (typeof showToast === "function") showToast("Enter a product name and category.", "error");
-                        return;
-                    }
-
-                    const products = data.getProducts();
-                    const newId = products.length > 0 ? Math.max.apply(null, products.map(p => p.id)) + 1 : 1;
-
-                    products.push({ id: newId, name, category, price, stock });
-                    data.saveProducts(products);
-
-                    addProductForm.reset();
-                    renderAdminProducts();
-
-                    if (typeof showToast === "function") showToast("Product added.");
-                });
-            }
-
-            renderAdminProducts();
-
-            /* ORDERS MANAGEMENT */
-
-            const ordersBody = document.querySelector("#adminOrdersTable tbody");
-
-            function renderAdminOrders() {
-
-                if (!ordersBody) return;
-
-                const orders = data.getOrders();
-
-                ordersBody.innerHTML = "";
-
-                if (orders.length === 0) {
-                    ordersBody.innerHTML = "<tr class='empty-row'><td colspan='5'>No orders placed yet.</td></tr>";
-                    return;
-                }
-
-                orders.forEach(function (order) {
-
-                    const row = document.createElement("tr");
-                    row.innerHTML =
-                        "<td>" + order.id + "</td>" +
-                        "<td>" + order.userName + "<br><small>" + order.userEmail + "</small></td>" +
-                        "<td>" + order.item + "</td>" +
-                        "<td>₱" + Number(order.amount).toLocaleString("en-PH") + "</td>" +
-                        "<td></td>";
-
-                    const statusCell = row.querySelector("td:last-child");
-                    const select = document.createElement("select");
-                    select.className = "admin-inline-select";
-
-                    ["Processing", "In Transit", "Delivered"].forEach(function (statusOption) {
-                        const option = document.createElement("option");
-                        option.value = statusOption;
-                        option.textContent = statusOption;
-                        if (statusOption === order.status) option.selected = true;
-                        select.appendChild(option);
-                    });
-
-                    select.addEventListener("change", function () {
-
-                        const fresh = data.getOrders();
-                        const target = fresh.find(o => o.id === order.id);
-                        if (!target) return;
-
-                        target.status = select.value;
-                        data.saveOrders(fresh);
-
-                        if (typeof logActivity === "function") {
-                            logActivity("Order Status Updated", order.id + " (" + order.item + ") set to " + select.value);
-                        }
-
-                        if (typeof showToast === "function") {
-                            showToast("Order " + order.id + " updated to " + select.value + ".");
-                        }
-
-                    });
-
-                    statusCell.appendChild(select);
-                    ordersBody.appendChild(row);
-
-                });
-
-            }
-
-            renderAdminOrders();
-
-        });
-
-    </script>
+    <script src="admin.js"></script>
 
 </body>
 
